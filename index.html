@@ -73,7 +73,7 @@
                         <rect x="1" y="4" width="2" height="1" fill="#FFFFFF"/>
                         <rect x="1" y="4" width="1" height="1" fill="#3388FF"/>
                         <rect x="5" y="4" width="2" height="1" fill="#FFFFFF"/>
-                        <rect x="6" y="4" width="1" height="1" fill="#3388FF"/>
+                        <rect x="6" h="4" width="1" height="1" fill="#3388FF"/>
                         <rect x="0" y="5" width="1" height="1" fill="#FF9E9E"/>
                         <rect x="7" y="5" width="1" height="1" fill="#FF9E9E"/>
                         <rect x="2" y="6" width="4" height="1" fill="#9C2A2A"/>
@@ -86,19 +86,17 @@
                     </div>
                 </div>
                 
-                <!-- 방장 전용 타이틀 우측 긴급 조작 패널 (우측 상단 액션 버튼과 완벽 동일 패밀리 스타일) -->
+                <!-- 방장 전용 타이틀 우측 긴급 조작 패널 (글자 제거 및 세련된 아이콘화 완료) -->
                 <div id="admin-title-actions" class="flex gap-2 md:gap-3" style="display: none;">
-                    <button id="btn-kick-all" title="모든 유저 퇴장" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex flex-col items-center justify-center">
-                        <svg class="w-7 h-7 text-red-500 mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <button id="btn-kick-all" title="모든 유저 퇴장" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        <span class="text-[10px] font-black text-red-400">유저 강퇴</span>
                     </button>
-                    <button id="btn-clear-map" title="전체 맵 삭제" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex flex-col items-center justify-center">
-                        <svg class="w-7 h-7 text-orange-500 mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <button id="btn-clear-map" title="전체 맵 삭제" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
                         </svg>
-                        <span class="text-[10px] font-black text-orange-400">맵 초기화</span>
                     </button>
                 </div>
             </div>
@@ -169,6 +167,27 @@
         </div>
     </div>
 
+    <!-- UI 가이드 및 에러 억제용 브라우저 얼럿 대체 시스템 (커스텀 프리미엄 팝업 모달) -->
+    <div id="custom-modal" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-slate-950 p-6 md:p-8 rounded-3xl border border-white/10 max-w-sm w-full text-center shadow-2xl flex flex-col items-center">
+            <svg class="w-12 h-12 text-yellow-400 mb-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <p id="modal-text" class="text-white font-bold text-lg leading-relaxed mb-6"></p>
+            <div class="flex gap-3 w-full">
+                <button id="modal-btn-cancel" class="flex-1 h-12 bg-slate-850 hover:bg-slate-800 text-white font-bold rounded-xl transition border border-white/5 active:scale-95">취소</button>
+                <button id="modal-btn-confirm" class="flex-1 h-12 bg-yellow-400 hover:bg-yellow-300 text-red-600 font-black rounded-xl transition active:scale-95 shadow-lg shadow-yellow-500/10">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-alert" class="absolute top-6 left-1/2 -translate-x-1/2 bg-slate-950/95 border border-white/10 px-6 py-4 rounded-2xl shadow-2xl z-[100] flex items-center gap-3 transition-all duration-300 pointer-events-none" style="display: none; opacity: 0; min-width: 280px; max-width: 90%;">
+        <svg class="w-6 h-6 text-yellow-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span class="text-white font-bold text-sm leading-snug" id="alert-text"></span>
+    </div>
+
     <!-- Firebase 및 Three.js 메인 로직 모듈 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -176,7 +195,7 @@
         import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ★ [여기에 파이어베이스 설정값을 복사해서 붙여넣으세요!] ★
-        const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCmyRWVTAlpYxVKDNMV6zbKSg_D-jA_bL8",
   authDomain: "ksms-block-world.firebaseapp.com",
   projectId: "ksms-block-world",
@@ -195,7 +214,7 @@
         let myUserId = null;
         let currentUserName = "";
         let isAdminMode = false;
-        let hasSyncedOnce = false; // [추가] 초기 로그인 로딩 전 강퇴 튕김 오작동 방지 플래그
+        let hasSyncedOnce = false; // 초기 로그인 로딩 전 강퇴 튕김 오작동 방지 플래그
         
         const BLOCKS_PALETTE = [
             { id: 'white',  name: '하얀색', fill: '#FFFFFF', border: '#D6D6D6' },
@@ -212,6 +231,44 @@
 
         let selectedColorIndex = 3; 
         let activeMode = 'build'; 
+
+        // 커스텀 UI 얼럿 및 컨펌 기능 바인딩 (alert(), confirm() 완전 대체)
+        window.customConfirm = function(msg, onConfirm) {
+            const modal = document.getElementById('custom-modal');
+            const text = document.getElementById('modal-text');
+            const btnCancel = document.getElementById('modal-btn-cancel');
+            const btnConfirm = document.getElementById('modal-btn-confirm');
+            
+            text.innerText = msg;
+            btnCancel.style.display = 'block'; 
+            modal.style.display = 'flex';
+            
+            btnConfirm.onclick = () => {
+                modal.style.display = 'none';
+                if (onConfirm) onConfirm();
+            };
+            btnCancel.onclick = () => {
+                modal.style.display = 'none';
+            };
+        };
+
+        window.customAlert = function(msg, duration = 3000) {
+            const alertBox = document.getElementById('custom-alert');
+            const text = document.getElementById('alert-text');
+            text.innerText = msg;
+            
+            alertBox.style.display = 'flex';
+            // 리플로우 강제 후 애니메이션 적용
+            alertBox.offsetHeight; 
+            alertBox.style.opacity = '1';
+            
+            setTimeout(() => {
+                alertBox.style.opacity = '0';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 300);
+            }, duration);
+        };
 
         // 사운드 이펙트
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -430,7 +487,7 @@
             // 로그인 완료 후 UI 가시화
             if (isAdminMode) {
                 document.getElementById('admin-only-actions').style.display = 'flex';
-                document.getElementById('admin-title-actions').style.display = 'flex'; // [추가] 타이틀바 내 강퇴/초기화 긴급 조작창 노출
+                document.getElementById('admin-title-actions').style.display = 'flex'; 
             }
             document.getElementById('main-ui-layer').style.display = 'flex';
 
@@ -451,14 +508,25 @@
                     setupBlocksListener();
                     setupPlayersListener();
                     
-                    // [수정] 방법 A 반영: 데이터 전송 딜레이 타이머를 100ms에서 1000ms(1초)로 완화하여 하루 무료 사용량 한도를 대폭 세이브
+                    // 1초(1000ms) 전송 주기로 대폭 개선하여 트래픽 한도 초과 방지
                     setInterval(syncMyPlayerPosition, 1000);
 
-                    // [추가] 일반 플레이어 화면에서 내 닉네임 데이터의 강제 삭제 유무를 반응형으로 검사 (강퇴 수신기)
+                    // 일반 플레이어 화면에서 내 닉네임 데이터의 강제 삭제 유무를 반응형으로 검사 (강퇴 수신기)
                     onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'players', myUserId), (snapshot) => {
                         if (hasSyncedOnce && !snapshot.exists()) {
-                            alert("방장에 의해 블록 세상 서버에서 퇴장(강퇴)되었습니다.");
-                            location.reload(); // 로그인 초기 화면으로 추방 및 재적재
+                            // alert() 대신 커스텀 모달 알림창 사용
+                            const modal = document.getElementById('custom-modal');
+                            const text = document.getElementById('modal-text');
+                            const btnCancel = document.getElementById('modal-btn-cancel');
+                            const btnConfirm = document.getElementById('modal-btn-confirm');
+                            
+                            text.innerText = "방장에 의해 블록 세상 서버에서 퇴장(강퇴)되었습니다.";
+                            btnCancel.style.display = 'none'; // 단순 알림이므로 취소 버튼 숨김
+                            modal.style.display = 'flex';
+                            
+                            btnConfirm.onclick = () => {
+                                location.reload(); // 로그인 화면으로 이동
+                            };
                         }
                     });
 
@@ -581,41 +649,42 @@
             });
         }
 
-
         // --- 방장 관리자 전용 긴급 원격 컨트롤러 로직 ---
 
-        // 1. 접속한 모든 유저 원격 퇴장(강제 강퇴) 시키기
-        document.getElementById('btn-kick-all').onclick = async (e) => {
+        // 1. 접속한 모든 유저 원격 퇴장(강제 강퇴) 시키기 (confirm() 대체 완료)
+        document.getElementById('btn-kick-all').onclick = (e) => {
             e.stopPropagation();
-            if (!confirm("정말 본인을 제외한 모든 접속자를 강제 퇴장(강퇴)시키겠습니까?")) return;
-            window.playSound('break');
-            
-            const playersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
-            for (let id in remotePlayers) {
-                // 파이어베이스에서 상대 유저의 플레이어 문서를 원격 삭제 -> 상대 화면의 snapshot 리스너가 이를 감지하고 강퇴됨
-                await deleteDoc(doc(playersRef, id));
-            }
-            alert("모든 유저를 강퇴 처리 완료했습니다.");
+            window.customConfirm("정말 본인을 제외한 모든 접속자를 강제 퇴장(강퇴)시키겠습니까?", async () => {
+                window.playSound('break');
+                
+                const playersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+                for (let id in remotePlayers) {
+                    // 파이어베이스에서 상대 유저의 플레이어 문서를 삭제하여 강퇴 유도
+                    await deleteDoc(doc(playersRef, id));
+                }
+                window.customAlert("모든 유저를 성공적으로 퇴장시켰습니다.");
+            });
         };
 
-        // 2. 전체 맵 데이터베이스에서 실시간 일괄 초기화(완전 삭제)하기
-        document.getElementById('btn-clear-map').onclick = async (e) => {
+        // 2. 전체 맵 데이터베이스에서 실시간 일괄 초기화(완전 삭제)하기 (confirm() 대체 완료)
+        document.getElementById('btn-clear-map').onclick = (e) => {
             e.stopPropagation();
-            if (!confirm("정말 데이터베이스의 모든 블록 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
-            window.playSound('break');
-            
-            document.getElementById('btn-clear-map').style.opacity = '0.5';
-            const blocksRef = collection(db, 'artifacts', appId, 'public', 'data', 'blocks');
-            
-            // 현재 활성화되어 렌더링된 모든 맵의 블록 키들을 추적하여 Firestore에서 삭제
-            const keys = Object.keys(voxels);
-            for (const key of keys) {
-                const parts = key.split(',');
-                const blockId = `${parts[0]}_${parts[1]}_${parts[2]}`;
-                await deleteDoc(doc(blocksRef, blockId));
-            }
-            document.getElementById('btn-clear-map').style.opacity = '1';
-            alert("서버 상의 전체 맵 데이터베이스 초기화가 완료되었습니다.");
+            window.customConfirm("정말 데이터베이스의 모든 블록 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.", async () => {
+                window.playSound('break');
+                
+                document.getElementById('btn-clear-map').style.opacity = '0.5';
+                const blocksRef = collection(db, 'artifacts', appId, 'public', 'data', 'blocks');
+                
+                // 현재 활성화된 모든 블록 키를 추적하여 Firestore에서 전부 삭제
+                const keys = Object.keys(voxels);
+                for (const key of keys) {
+                    const parts = key.split(',');
+                    const blockId = `${parts[0]}_${parts[1]}_${parts[2]}`;
+                    await deleteDoc(doc(blocksRef, blockId));
+                }
+                document.getElementById('btn-clear-map').style.opacity = '1';
+                window.customAlert("서버 상의 전체 맵 데이터베이스 초기화가 완료되었습니다.");
+            });
         };
 
         // --- 방장 관리자용 저장 및 서버 전체 업로드 ---
@@ -631,7 +700,7 @@
         document.getElementById('btn-save-file').onclick = (e) => {
             e.stopPropagation(); window.playSound('build');
             const data = getSerializedWorldData();
-            if (data.length === 0) { alert("저장할 블록이 없습니다!"); return; }
+            if (data.length === 0) { window.customAlert("저장할 블록이 없습니다!"); return; }
             const jsonString = JSON.stringify(data, null, 2);
             const blob = new Blob([jsonString], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -663,9 +732,9 @@
                     for (const b of parsed) {
                         await setDoc(doc(blocksRef, `${b.x}_${b.y}_${b.z}`), { x: b.x, y: b.y, z: b.z, colorIndex: b.pi });
                     }
-                    alert("서버에 새로운 맵 파일이 성공적으로 배포되었습니다!");
+                    window.customAlert("서버에 새로운 맵 파일이 성공적으로 배포되었습니다!");
                     document.getElementById('btn-load-file').style.opacity = '1';
-                } catch (err) { alert("로드 실패: " + err.message); document.getElementById('btn-load-file').style.opacity = '1';}
+                } catch (err) { window.customAlert("로드 실패: " + err.message); document.getElementById('btn-load-file').style.opacity = '1';}
                 fileInput.value = '';
             };
             reader.readAsText(file);
@@ -875,7 +944,7 @@
 
             function submitLogin() {
                 const name = inputUsername.value.trim();
-                if (!name) { alert("이름을 한 글자 이상 입력해 주세요!"); return; }
+                if (!name) { window.customAlert("이름을 한 글자 이상 입력해 주세요!"); return; }
                 
                 currentUserName = name;
                 isAdminMode = (currentUserName === "조현지");

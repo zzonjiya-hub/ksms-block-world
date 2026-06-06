@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>KSMS 블록 세상 (Multiplayer)</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans KR -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Three.js (r128) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body {
@@ -20,9 +23,11 @@
 </head>
 <body class="bg-sky-200 overflow-hidden w-full h-full">
 
+    <!-- 로그인 (닉네임 입력) 오버레이 팝업 -->
     <div id="login-overlay" class="absolute inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-slate-950 p-6 md:p-8 rounded-2xl border border-white/10 max-w-sm w-full text-center shadow-2xl flex flex-col items-center">
             <div class="flex items-center justify-center gap-3 mb-6">
+                <!-- 팝업용 스티브 얼굴 아이콘 -->
                 <svg class="w-10 h-10 rounded-lg shadow-sm" viewBox="0 0 8 8" shape-rendering="crispEdges">
                     <rect width="8" height="8" fill="#FFD1B3"/>
                     <rect width="8" height="2" fill="#6A4F3B"/>
@@ -46,36 +51,61 @@
         </div>
     </div>
 
+    <!-- WebGL Canvas 컨테이너 -->
     <div id="canvas-container" class="absolute inset-0 w-full h-full z-0"></div>
 
+    <!-- 숨겨진 맵 파일 업로드 Input -->
     <input type="file" id="file-map-upload" accept=".ksms" class="hidden">
 
+    <!-- 메인 UI 레이어 -->
     <div class="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-4 md:p-6" style="display: none;" id="main-ui-layer">
         
+        <!-- 상단 바 -->
         <div class="flex justify-between items-center w-full pointer-events-auto gap-4">
-            <div class="bg-slate-950/75 backdrop-blur-xl h-[72px] px-5 rounded-2xl border border-white/10 flex items-center gap-3.5 shadow-2xl">
-                <svg class="w-8 h-8 rounded-lg shadow-sm" viewBox="0 0 8 8" shape-rendering="crispEdges">
-                    <rect width="8" height="8" fill="#FFD1B3"/>
-                    <rect width="8" height="2" fill="#6A4F3B"/>
-                    <rect x="0" y="2" width="1" height="2" fill="#6A4F3B"/>
-                    <rect x="7" y="2" width="1" height="2" fill="#6A4F3B"/>
-                    <rect x="1" y="4" width="2" height="1" fill="#FFFFFF"/>
-                    <rect x="1" y="4" width="1" height="1" fill="#3388FF"/>
-                    <rect x="5" y="4" width="2" height="1" fill="#FFFFFF"/>
-                    <rect x="6" y="4" width="1" height="1" fill="#3388FF"/>
-                    <rect x="0" y="5" width="1" height="1" fill="#FF9E9E"/>
-                    <rect x="7" y="5" width="1" height="1" fill="#FF9E9E"/>
-                    <rect x="2" y="6" width="4" height="1" fill="#9C2A2A"/>
-                    <rect x="3" y="6" width="2" height="1" fill="#FF7D7D"/>
-                </svg>
-                <div class="flex flex-col justify-center">
-                    <h1 class="text-sm md:text-xl font-black text-white tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] leading-tight">
-                        KSMS 블록 세상
-                    </h1>
+            <div class="flex items-center gap-2 md:gap-3">
+                <div class="bg-slate-950/75 backdrop-blur-xl h-[72px] px-5 rounded-2xl border border-white/10 flex items-center gap-3.5 shadow-2xl">
+                    <!-- 스티브 얼굴 아이콘 -->
+                    <svg class="w-8 h-8 rounded-lg shadow-sm" viewBox="0 0 8 8" shape-rendering="crispEdges">
+                        <rect width="8" height="8" fill="#FFD1B3"/>
+                        <rect width="8" height="2" fill="#6A4F3B"/>
+                        <rect x="0" y="2" width="1" height="2" fill="#6A4F3B"/>
+                        <rect x="7" y="2" width="1" height="2" fill="#6A4F3B"/>
+                        <rect x="1" y="4" width="2" height="1" fill="#FFFFFF"/>
+                        <rect x="1" y="4" width="1" height="1" fill="#3388FF"/>
+                        <rect x="5" y="4" width="2" height="1" fill="#FFFFFF"/>
+                        <rect x="6" y="4" width="1" height="1" fill="#3388FF"/>
+                        <rect x="0" y="5" width="1" height="1" fill="#FF9E9E"/>
+                        <rect x="7" y="5" width="1" height="1" fill="#FF9E9E"/>
+                        <rect x="2" y="6" width="4" height="1" fill="#9C2A2A"/>
+                        <rect x="3" y="6" width="2" height="1" fill="#FF7D7D"/>
+                    </svg>
+                    <div class="flex flex-col justify-center">
+                        <h1 class="text-sm md:text-xl font-black text-white tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] leading-tight">
+                            KSMS 블록 세상
+                        </h1>
+                    </div>
+                </div>
+                
+                <!-- 방장 전용 타이틀 우측 긴급 조작 패널 (우측 상단 액션 버튼과 완벽 동일 패밀리 스타일) -->
+                <div id="admin-title-actions" class="flex gap-2 md:gap-3" style="display: none;">
+                    <button id="btn-kick-all" title="모든 유저 퇴장" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex flex-col items-center justify-center">
+                        <svg class="w-7 h-7 text-red-500 mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span class="text-[10px] font-black text-red-400">유저 강퇴</span>
+                    </button>
+                    <button id="btn-clear-map" title="전체 맵 삭제" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex flex-col items-center justify-center">
+                        <svg class="w-7 h-7 text-orange-500 mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
+                        </svg>
+                        <span class="text-[10px] font-black text-orange-400">맵 초기화</span>
+                    </button>
                 </div>
             </div>
 
+            <!-- 우측 상단 액션 버튼 -->
             <div class="flex gap-2 md:gap-3">
+                <!-- 방장 전용: 저장 / 불러오기 -->
                 <div id="admin-only-actions" class="flex gap-2 md:gap-3" style="display: none;">
                     <button id="btn-save-file" title="맵 파일 다운로드 (.ksms)" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex items-center justify-center">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -90,6 +120,7 @@
                         </svg>
                     </button>
                 </div>
+                <!-- 캡처 및 전체화면 -->
                 <button id="btn-camera" title="스냅샷 캡처" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl hover:bg-slate-900/90 active:scale-95 transition text-white rounded-2xl shadow-2xl border border-white/10 flex items-center justify-center">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 018.686 5h6.628c.783 0 1.5.437 1.859 1.175l.443.91a1.154 1.154 0 00.93.595h1.104C20.65 7.68 22 9.03 22 10.699v7.3a2.95 2.95 0 01-2.95 2.95H4.95A2.95 2.95 0 012 18V10.7c0-1.67 1.35-3.02 3.018-3.02h1.104a1.154 1.154 0 00.93-.595l.443-.91z"></path>
@@ -102,13 +133,16 @@
             </div>
         </div>
 
+        <!-- 수직 비행 버튼 -->
         <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-4 pointer-events-auto z-10">
             <button id="btn-fly-up" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl active:bg-slate-800 text-white border border-white/10 rounded-2xl flex items-center justify-center font-black text-2xl shadow-2xl transition-all hover:bg-slate-900/90 active:scale-90">▲</button>
             <button id="btn-fly-down" class="w-[72px] h-[72px] bg-slate-950/75 backdrop-blur-xl active:bg-slate-800 text-white border border-white/10 rounded-2xl flex items-center justify-center font-black text-2xl shadow-2xl transition-all hover:bg-slate-900/90 active:scale-90">▼</button>
         </div>
 
+        <!-- 하단 조작계 -->
         <div class="w-full flex flex-col md:flex-row justify-between items-end gap-6">
             
+            <!-- D-Pad -->
             <div class="pointer-events-auto flex flex-col gap-1">
                 <div class="grid grid-cols-3 gap-2">
                     <div></div>
@@ -120,10 +154,12 @@
                 </div>
             </div>
 
+            <!-- 팔레트 컨테이너 -->
             <div class="bg-slate-950/75 backdrop-blur-xl h-[72px] px-5 rounded-2xl shadow-2xl border border-white/10 pointer-events-auto flex items-center justify-center mx-auto max-w-[95%] md:max-w-xl">
                 <div id="palette-container" class="flex gap-2.5 md:gap-3.5 py-1 px-1 justify-center items-center"></div>
             </div>
 
+            <!-- 블록 조작 (O/X) -->
             <div class="pointer-events-auto flex flex-col gap-1 items-center self-center md:self-end">
                 <div class="flex gap-2">
                     <button id="btn-mode-build" class="w-[72px] h-[72px] bg-slate-950/75 text-white border border-white/10 rounded-2xl flex items-center justify-center font-black text-4xl shadow-lg transition-all active:scale-90 pb-1.5 leading-none">O</button>
@@ -133,6 +169,7 @@
         </div>
     </div>
 
+    <!-- Firebase 및 Three.js 메인 로직 모듈 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -140,13 +177,13 @@
 
         // ★ [여기에 파이어베이스 설정값을 복사해서 붙여넣으세요!] ★
         const firebaseConfig = {
-  apiKey: "AIzaSyCmyRWVTAlpYxVKDNMV6zbKSg_D-jA_bL8",
-  authDomain: "ksms-block-world.firebaseapp.com",
-  projectId: "ksms-block-world",
-  storageBucket: "ksms-block-world.firebasestorage.app",
-  messagingSenderId: "47281304421",
-  appId: "1:47281304421:web:774a76a83d8b10db37678c"
-};
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
         // =========================================================
 
         const app = initializeApp(firebaseConfig);
@@ -158,6 +195,7 @@
         let myUserId = null;
         let currentUserName = "";
         let isAdminMode = false;
+        let hasSyncedOnce = false; // [추가] 초기 로그인 로딩 전 강퇴 튕김 오작동 방지 플래그
         
         const BLOCKS_PALETTE = [
             { id: 'white',  name: '하얀색', fill: '#FFFFFF', border: '#D6D6D6' },
@@ -390,7 +428,10 @@
             ghostMesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(ghostGeo), new THREE.LineBasicMaterial({ color: 0xffdd00, linewidth: 2 })));
             
             // 로그인 완료 후 UI 가시화
-            if (isAdminMode) document.getElementById('admin-only-actions').style.display = 'flex';
+            if (isAdminMode) {
+                document.getElementById('admin-only-actions').style.display = 'flex';
+                document.getElementById('admin-title-actions').style.display = 'flex'; // [추가] 타이틀바 내 강퇴/초기화 긴급 조작창 노출
+            }
             document.getElementById('main-ui-layer').style.display = 'flex';
 
             renderPalette();
@@ -410,8 +451,16 @@
                     setupBlocksListener();
                     setupPlayersListener();
                     
-                    // 내 위치 서버로 동기화 루프 시작 (10fps Throttle)
-                    setInterval(syncMyPlayerPosition, 100);
+                    // [수정] 방법 A 반영: 데이터 전송 딜레이 타이머를 100ms에서 1000ms(1초)로 완화하여 하루 무료 사용량 한도를 대폭 세이브
+                    setInterval(syncMyPlayerPosition, 1000);
+
+                    // [추가] 일반 플레이어 화면에서 내 닉네임 데이터의 강제 삭제 유무를 반응형으로 검사 (강퇴 수신기)
+                    onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'players', myUserId), (snapshot) => {
+                        if (hasSyncedOnce && !snapshot.exists()) {
+                            alert("방장에 의해 블록 세상 서버에서 퇴장(강퇴)되었습니다.");
+                            location.reload(); // 로그인 초기 화면으로 추방 및 재적재
+                        }
+                    });
 
                     // 브라우저 닫을 때 접속자 명단에서 자동 삭제
                     window.addEventListener('beforeunload', () => {
@@ -527,9 +576,47 @@
                 rotY: player.rotY, animTime: player.animTime,
                 name: currentUserName, isAdmin: isAdminMode,
                 timestamp: serverTimestamp()
-            }, { merge: true });
+            }, { merge: true }).then(() => {
+                hasSyncedOnce = true; // 최초 동기화 연결 세팅 완료 선언 (강퇴 오작동 방지)
+            });
         }
 
+
+        // --- 방장 관리자 전용 긴급 원격 컨트롤러 로직 ---
+
+        // 1. 접속한 모든 유저 원격 퇴장(강제 강퇴) 시키기
+        document.getElementById('btn-kick-all').onclick = async (e) => {
+            e.stopPropagation();
+            if (!confirm("정말 본인을 제외한 모든 접속자를 강제 퇴장(강퇴)시키겠습니까?")) return;
+            window.playSound('break');
+            
+            const playersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+            for (let id in remotePlayers) {
+                // 파이어베이스에서 상대 유저의 플레이어 문서를 원격 삭제 -> 상대 화면의 snapshot 리스너가 이를 감지하고 강퇴됨
+                await deleteDoc(doc(playersRef, id));
+            }
+            alert("모든 유저를 강퇴 처리 완료했습니다.");
+        };
+
+        // 2. 전체 맵 데이터베이스에서 실시간 일괄 초기화(완전 삭제)하기
+        document.getElementById('btn-clear-map').onclick = async (e) => {
+            e.stopPropagation();
+            if (!confirm("정말 데이터베이스의 모든 블록 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
+            window.playSound('break');
+            
+            document.getElementById('btn-clear-map').style.opacity = '0.5';
+            const blocksRef = collection(db, 'artifacts', appId, 'public', 'data', 'blocks');
+            
+            // 현재 활성화되어 렌더링된 모든 맵의 블록 키들을 추적하여 Firestore에서 삭제
+            const keys = Object.keys(voxels);
+            for (const key of keys) {
+                const parts = key.split(',');
+                const blockId = `${parts[0]}_${parts[1]}_${parts[2]}`;
+                await deleteDoc(doc(blocksRef, blockId));
+            }
+            document.getElementById('btn-clear-map').style.opacity = '1';
+            alert("서버 상의 전체 맵 데이터베이스 초기화가 완료되었습니다.");
+        };
 
         // --- 방장 관리자용 저장 및 서버 전체 업로드 ---
         function getSerializedWorldData() {
@@ -807,25 +894,3 @@
     </script>
 </body>
 </html>
-```
-
----
-
-### 🚀 1단계: 구글 파이어베이스(Firebase) 세팅 및 연동하기
-앱 코드 안의 `firebaseConfig`를 내 것으로 채우기 위한 아주 간단한 과정입니다. 비용은 **완전 무료**입니다.
-
-1. **파이어베이스 콘솔 접속:** [Firebase Console](https://console.firebase.google.com/)에 구글 계정으로 로그인하고 **[프로젝트 만들기]**를 누릅니다. (이름은 마음대로 작성)
-2. **웹 앱 추가:** 프로젝트가 만들어지면 화면 중앙에 보이는 **`</>` (웹 마크)** 아이콘을 클릭해 앱을 등록합니다.
-3. **Config 복사:** 등록이 완료되면 화면에 `const firebaseConfig = { apiKey: ... };` 모양의 설정 코드가 나옵니다. 이 6줄 정도의 코드를 복사해서 **위 HTML 코드 260번째 줄 근처의 `firebaseConfig` 부분에 그대로 덮어쓰기** 해줍니다.
-4. **인증(Auth) 켜기:** 좌측 메뉴에서 **Authentication(인증) -> 시작하기 -> Sign-in method** 탭으로 갑니다. 목록 중에 **[익명]**을 찾아 '사용 설정'으로 켜고 저장합니다. (로그인 없이 누구나 닉네임만 치고 들어오게 하기 위함)
-5. **데이터베이스(Firestore) 켜기:** 좌측 메뉴에서 **Firestore Database -> 데이터베이스 만들기**를 클릭합니다. 위치는 'asia-northeast3 (Seoul)'로 하고 생성합니다.
-6. **규칙(Rules) 수정:** Firestore 메뉴 중 **[규칙]** 탭을 눌러서 아래 코드로 바꾸고 **[게시]**를 누릅니다.
-   ```javascript
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /{document=**} {
-         allow read, write: if true; // 누구나 읽고 쓸 수 있게 허용
-       }
-     }
-   }
